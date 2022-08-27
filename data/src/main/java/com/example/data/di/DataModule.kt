@@ -24,7 +24,7 @@ import javax.inject.Singleton
 object DataModule {
     @Singleton
     @Provides
-    fun provideCoinDatabase(@ApplicationContext context: Context): ExamDatabase {
+    fun provideExamDatabase(@ApplicationContext context: Context): ExamDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             ExamDatabase::class.java, ExamDatabase.DB_FILE_NAME
@@ -33,7 +33,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideCoinDao(appDB: ExamDatabase): ExamDao {
+    fun provideExamDao(appDB: ExamDatabase): ExamDao {
         return appDB.examDao()
     }
 

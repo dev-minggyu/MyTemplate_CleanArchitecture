@@ -17,14 +17,18 @@
         android:theme="@style/Theme.MyTemplate_CleanArchitecture"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true">
+            android:name="com.example.mytemplate.ui.splash.InitActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyTemplate_CleanArchitecture.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name="com.example.mytemplate.ui.main.MainActivity"
+            android:exported="false" />
+    </application>
 </manifest>

@@ -49,6 +49,11 @@ dependencies {
     implementation deps.material
     implementation deps.constraint_layout
 
+    // Ktx
+    implementation deps.activity_ktx
+    implementation deps.fragment_ktx
+    implementation deps.lifecycle_viewmodel_ktx
+
     // Hilt
     implementation deps.hilt.android
     kapt deps.hilt.android_compiler

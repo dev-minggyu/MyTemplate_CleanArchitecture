@@ -76,7 +76,7 @@ dependencies {
 
     // Splash Screen
     implementation deps.splash_screen
-    
+
     // Leak Canary
     debugImplementation deps.leakcanary.android
 

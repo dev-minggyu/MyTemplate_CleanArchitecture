@@ -74,6 +74,9 @@ dependencies {
     implementation deps.kotlin_serialization_json
     implementation deps.kotlin_serialization_converter
 
+    // Splash Screen
+    implementation deps.splash_screen
+    
     // Leak Canary
     debugImplementation deps.leakcanary.android
 

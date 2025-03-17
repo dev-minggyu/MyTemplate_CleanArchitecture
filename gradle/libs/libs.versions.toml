@@ -1,9 +1,4 @@
 [versions]
-# SDK
-compileSdk = "32"
-minSdk = "21"
-targetSdk = "32"
-
 # Kotlin
 kotlin = "1.7.0"
 kotlinx-serialization = "1.3.3"

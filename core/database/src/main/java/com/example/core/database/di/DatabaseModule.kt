@@ -3,6 +3,8 @@ package com.example.core.database.di
 import android.content.Context
 import androidx.room.Room
 import com.example.core.database.ExamDatabase
+import com.example.core.database.datasource.exam.ExamLocalDataSource
+import com.example.core.database.datasource.exam.ExamLocalDataSourceImpl
 import com.example.core.database.exam.ExamDao
 import dagger.Module
 import dagger.Provides
@@ -27,5 +29,11 @@ object DatabaseModule {
     @Provides
     fun provideExamDao(appDB: ExamDatabase): ExamDao {
         return appDB.examDao()
+    }
+    
+    @Singleton
+    @Provides
+    fun provideExamLocalDataSource(examDao: ExamDao): ExamLocalDataSource {
+        return ExamLocalDataSourceImpl(examDao)
     }
 } 

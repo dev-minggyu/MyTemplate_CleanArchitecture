@@ -1,6 +1,8 @@
 package com.example.core.network.di
 
 import com.example.core.network.ApiInterface
+import com.example.core.network.datasource.exam.ExamRemoteDataSource
+import com.example.core.network.datasource.exam.ExamRemoteDataSourceImpl
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -36,5 +38,11 @@ object NetworkModule {
     @Singleton
     fun provideApiInterface(retrofit: Retrofit): ApiInterface {
         return retrofit.create(ApiInterface::class.java)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideExamRemoteDataSource(apiInterface: ApiInterface): ExamRemoteDataSource {
+        return ExamRemoteDataSourceImpl(apiInterface)
     }
 } 

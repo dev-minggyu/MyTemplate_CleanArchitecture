@@ -12,6 +12,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("gradle/libs/libs.versions.toml"))
+        }
+    }
 }
 rootProject.name = "MyTemplate_CleanArchitecture"
 include(":app")

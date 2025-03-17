@@ -10,11 +10,11 @@ fun Project.configureAndroid() {
     val android = extensions.getByType<BaseExtension>()
     
     android.apply {
-        compileSdkVersion(32)
+        compileSdkVersion(AndroidSdk.compileSdk)
         
         defaultConfig {
-            minSdk = 21
-            targetSdk = 32
+            minSdk = AndroidSdk.minSdk
+            targetSdk = AndroidSdk.targetSdk
             
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             consumerProguardFiles("consumer-rules.pro")

@@ -33,8 +33,13 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:network"))
 
-    implementation(libs.bundles.androidx.ui)
-    implementation(libs.bundles.androidx.ktx)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.material)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     // Splash Screen
     implementation(libs.androidx.splash.screen)
@@ -42,6 +47,7 @@ dependencies {
     // Leak Canary
     debugImplementation(libs.leakcanary)
 
-    testImplementation(libs.bundles.test.implementation)
-    androidTestImplementation(libs.bundles.test.android.implementation)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.test.espresso)
 } 

@@ -3,7 +3,6 @@ package com.example.core.network.di
 import com.example.core.network.ApiInterface
 import com.example.core.network.datasource.exam.ExamRemoteDataSource
 import com.example.core.network.datasource.exam.ExamRemoteDataSourceImpl
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +12,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -39,7 +39,7 @@ object NetworkModule {
     fun provideApiInterface(retrofit: Retrofit): ApiInterface {
         return retrofit.create(ApiInterface::class.java)
     }
-    
+
     @Provides
     @Singleton
     fun provideExamRemoteDataSource(apiInterface: ApiInterface): ExamRemoteDataSource {

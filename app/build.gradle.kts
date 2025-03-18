@@ -1,16 +1,10 @@
 plugins {
-    id("android-application")
-    id("mytemplate.android.hilt")
+    id("mytemplate.android.application")
+    id("mytemplate.android.hilt.plugin")
 }
 
 android {
-    defaultConfig {
-        applicationId = "com.example.mytemplate"
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+    namespace = "com.example.mytemplate"
 
     buildTypes {
         release {
@@ -33,21 +27,23 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:network"))
 
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.material)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.extension)
+    implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.preference)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
-    // Splash Screen
-    implementation(libs.androidx.splash.screen)
+    implementation(libs.google.android.material)
 
-    // Leak Canary
-    debugImplementation(libs.leakcanary)
+    implementation(libs.test.junit)
+    implementation(libs.test.junit.extension)
+    implementation(libs.test.esspresso.core)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.junit)
-    androidTestImplementation(libs.androidx.test.espresso)
+    debugImplementation(libs.leakcanary.android)
 } 

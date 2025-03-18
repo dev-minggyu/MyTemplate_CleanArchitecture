@@ -1,6 +1,5 @@
 package com.example.mytemplate.ui.splash
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -10,13 +9,13 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.mytemplate.base.BaseActivity
 import com.example.mytemplate.databinding.ActivityInitBinding
 import com.example.mytemplate.ui.main.MainActivity
-import com.example.mytemplate.ui.splash.InitContract.Effect
-import com.example.mytemplate.ui.splash.InitContract.Intent
-import com.example.mytemplate.ui.splash.InitContract.State
+import com.example.mytemplate.ui.splash.InitContract.InitEffect
+import com.example.mytemplate.ui.splash.InitContract.InitIntent
+import com.example.mytemplate.ui.splash.InitContract.InitState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InitActivity : BaseActivity<ActivityInitBinding, Intent, State, Effect, InitViewModel>() {
+class InitActivity : BaseActivity<ActivityInitBinding, InitIntent, InitState, InitEffect, InitViewModel>() {
     override val viewModel: InitViewModel by viewModels()
 
     private var isReady = false
@@ -32,10 +31,10 @@ class InitActivity : BaseActivity<ActivityInitBinding, Intent, State, Effect, In
     }
 
     override fun initView() {
-        processIntent(Intent.Initialize)
+        processIntent(InitIntent.Initialize)
     }
 
-    override fun renderState(state: State) {
+    override fun renderState(state: InitState) {
         isReady = state.isInitialized
 
         state.error?.let {
@@ -43,19 +42,19 @@ class InitActivity : BaseActivity<ActivityInitBinding, Intent, State, Effect, In
         }
     }
 
-    override fun handleEffect(effect: Effect) {
+    override fun handleEffect(effect: InitEffect) {
         when (effect) {
-            is Effect.NavigateToMain -> {
+            is InitEffect.NavigateToMain -> {
                 navigateToMain()
             }
-            is Effect.ShowError -> {
+            is InitEffect.ShowError -> {
                 Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(InitIntent(this, MainActivity::class.java))
         finish()
     }
 

@@ -7,13 +7,13 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytemplate.base.BaseActivity
 import com.example.mytemplate.databinding.ActivityMainBinding
-import com.example.mytemplate.ui.main.MainContract.Effect
-import com.example.mytemplate.ui.main.MainContract.Intent
-import com.example.mytemplate.ui.main.MainContract.State
+import com.example.mytemplate.ui.main.MainContract.MainEffect
+import com.example.mytemplate.ui.main.MainContract.MainIntent
+import com.example.mytemplate.ui.main.MainContract.MainState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, Intent, State, Effect, MainViewModel>() {
+class MainActivity : BaseActivity<ActivityMainBinding, MainIntent, MainState, MainEffect, MainViewModel>() {
     override val viewModel: MainViewModel by viewModels()
 
     override fun inflateViewBinding(): ActivityMainBinding {
@@ -26,18 +26,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, Intent, State, Effect, Ma
 
     override fun initView() {
         binding.btnLoadData.setOnClickListener {
-            processIntent(Intent.LoadData)
+            processIntent(MainIntent.LoadData)
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = MainAdapter { id ->
-            processIntent(Intent.ClickItem(id))
+            processIntent(MainIntent.ClickItem(id))
         }
 
-        processIntent(Intent.LoadData)
+        processIntent(MainIntent.LoadData)
     }
 
-    override fun renderState(state: State) {
+    override fun renderState(state: MainState) {
         binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
 
         (binding.recyclerView.adapter as? MainAdapter)?.submitList(state.data)
@@ -47,12 +47,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, Intent, State, Effect, Ma
         }
     }
 
-    override fun handleEffect(effect: Effect) {
+    override fun handleEffect(effect: MainEffect) {
         when (effect) {
-            is Effect.ShowToast -> {
+            is MainEffect.ShowToast -> {
                 Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
             }
-            is Effect.NavigateToDetail -> {
+            is MainEffect.NavigateToDetail -> {
                 Toast.makeText(this, "상세 화면으로 이동: ${effect.id}", Toast.LENGTH_SHORT).show()
             }
         }

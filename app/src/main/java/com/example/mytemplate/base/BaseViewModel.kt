@@ -2,9 +2,9 @@ package com.example.mytemplate.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mytemplate.base.contract.Effect
-import com.example.mytemplate.base.contract.Intent
-import com.example.mytemplate.base.contract.State
+import com.example.mytemplate.base.contract.UiEffect
+import com.example.mytemplate.base.contract.UiIntent
+import com.example.mytemplate.base.contract.UiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<I : Intent, S : State, E : Effect> : ViewModel() {
+abstract class BaseViewModel<I : UiIntent, S : UiState, E : UiEffect> : ViewModel() {
 
     private val _state = MutableStateFlow(createInitialState())
     val state: StateFlow<S> = _state.asStateFlow()

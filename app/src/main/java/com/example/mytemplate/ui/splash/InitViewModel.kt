@@ -2,22 +2,22 @@ package com.example.mytemplate.ui.splash
 
 import androidx.lifecycle.viewModelScope
 import com.example.mytemplate.base.BaseViewModel
-import com.example.mytemplate.ui.splash.InitContract.Effect
-import com.example.mytemplate.ui.splash.InitContract.Intent
-import com.example.mytemplate.ui.splash.InitContract.State
+import com.example.mytemplate.ui.splash.InitContract.InitEffect
+import com.example.mytemplate.ui.splash.InitContract.InitIntent
+import com.example.mytemplate.ui.splash.InitContract.InitState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InitViewModel @Inject constructor() : BaseViewModel<Intent, State, Effect>() {
+class InitViewModel @Inject constructor() : BaseViewModel<InitIntent, InitState, InitEffect>() {
 
-    override fun createInitialState(): State = State()
+    override fun createInitialState(): InitState = InitState()
 
-    override fun handleIntent(intent: Intent) {
+    override fun handleIntent(intent: InitIntent) {
         when (intent) {
-            is Intent.Initialize -> initialize()
+            is InitIntent.Initialize -> initialize()
         }
     }
 
@@ -28,11 +28,11 @@ class InitViewModel @Inject constructor() : BaseViewModel<Intent, State, Effect>
 
                 setState { copy(isInitialized = true) }
 
-                setEffect(Effect.NavigateToMain)
+                setEffect(InitEffect.NavigateToMain)
             } catch (e: Exception) {
                 setState { copy(error = e.message) }
 
-                setEffect(Effect.ShowError(e.message ?: "초기화 중 오류가 발생했습니다."))
+                setEffect(InitEffect.ShowError(e.message ?: "초기화 중 오류가 발생했습니다."))
             }
         }
     }

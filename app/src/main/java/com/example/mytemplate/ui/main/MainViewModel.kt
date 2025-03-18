@@ -1,21 +1,21 @@
 package com.example.mytemplate.ui.main
 
 import com.example.mytemplate.base.BaseViewModel
-import com.example.mytemplate.ui.main.MainContract.Effect
-import com.example.mytemplate.ui.main.MainContract.Intent
-import com.example.mytemplate.ui.main.MainContract.State
+import com.example.mytemplate.ui.main.MainContract.MainEffect
+import com.example.mytemplate.ui.main.MainContract.MainIntent
+import com.example.mytemplate.ui.main.MainContract.MainState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : BaseViewModel<Intent, State, Effect>() {
+class MainViewModel @Inject constructor() : BaseViewModel<MainIntent, MainState, MainEffect>() {
 
-    override fun createInitialState(): State = State()
+    override fun createInitialState(): MainState = MainState()
 
-    override fun handleIntent(intent: Intent) {
+    override fun handleIntent(intent: MainIntent) {
         when (intent) {
-            is Intent.LoadData -> loadData()
-            is Intent.ClickItem -> handleItemClick(intent.id)
+            is MainIntent.LoadData -> loadData()
+            is MainIntent.ClickItem -> handleItemClick(intent.id)
         }
     }
 
@@ -31,10 +31,10 @@ class MainViewModel @Inject constructor() : BaseViewModel<Intent, State, Effect>
             )
         }
 
-        setEffect(Effect.ShowToast("데이터 로드 완료"))
+        setEffect(MainEffect.ShowToast("데이터 로드 완료"))
     }
 
     private fun handleItemClick(id: String) {
-        setEffect(Effect.NavigateToDetail(id))
+        setEffect(MainEffect.NavigateToDetail(id))
     }
 }

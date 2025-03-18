@@ -1,22 +1,21 @@
 package com.example.mytemplate.ui.splash
 
-import com.example.mytemplate.base.contract.Effect
-import com.example.mytemplate.base.contract.Intent
-import com.example.mytemplate.base.contract.State
+import com.example.mytemplate.base.contract.UiEffect
+import com.example.mytemplate.base.contract.UiIntent
+import com.example.mytemplate.base.contract.UiState
 
 class InitContract {
-
-    sealed class Intent : com.example.mytemplate.base.contract.Intent {
-        object Initialize : Intent()
+    sealed class InitIntent : UiIntent {
+        data object Initialize : InitIntent()
     }
 
-    data class State(
+    data class InitState(
         val isInitialized: Boolean = false,
         val error: String? = null
-    ) : com.example.mytemplate.base.contract.State
+    ) : UiState
 
-    sealed class Effect : com.example.mytemplate.base.contract.Effect {
-        object NavigateToMain : Effect()
-        data class ShowError(val message: String) : Effect()
+    sealed class InitEffect : UiEffect {
+        data object NavigateToMain : InitEffect()
+        data class ShowError(val message: String) : InitEffect()
     }
 }

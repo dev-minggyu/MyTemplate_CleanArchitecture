@@ -13,45 +13,45 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<I : UiIntent, S : UiState, E : UiEffect> : ViewModel() {
+abstract class BaseViewModel<Intent : UiIntent, State : UiState, Effect : UiEffect> : ViewModel() {
 
-    private val _state = MutableStateFlow(createInitialState())
-    val state: StateFlow<S> = _state.asStateFlow()
+    private val _state: MutableStateFlow<State> by lazy { MutableStateFlow(createInitialState()) }
+    val state: StateFlow<State> = _state.asStateFlow()
 
-    private val _intent = MutableSharedFlow<I>()
+    private val _event = MutableSharedFlow<Intent>()
 
-    private val _effect = Channel<E>(Channel.BUFFERED)
+    private val _effect = Channel<Effect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
     init {
         viewModelScope.launch {
-            _intent.collect { intent ->
+            _event.collect { intent ->
                 handleIntent(intent)
             }
         }
     }
 
-    protected abstract fun handleIntent(intent: I)
+    protected abstract fun handleIntent(intent: Intent)
 
-    protected abstract fun createInitialState(): S
+    protected abstract fun createInitialState(): State
 
-    protected val currentState: S
+    protected val currentState: State
         get() = state.value
 
-    protected fun setState(reduce: S.() -> S) {
+    protected fun setState(reduce: State.() -> State) {
         val newState = currentState.reduce()
         _state.value = newState
     }
 
-    protected fun setEffect(effect: E) {
+    protected fun setEffect(effect: Effect) {
         viewModelScope.launch {
             _effect.send(effect)
         }
     }
 
-    fun processIntent(intent: I) {
+    fun processIntent(intent: Intent) {
         viewModelScope.launch {
-            _intent.emit(intent)
+            _event.emit(intent)
         }
     }
 } 

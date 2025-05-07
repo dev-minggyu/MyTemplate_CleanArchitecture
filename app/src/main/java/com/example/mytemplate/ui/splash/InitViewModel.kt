@@ -3,7 +3,7 @@ package com.example.mytemplate.ui.splash
 import androidx.lifecycle.viewModelScope
 import com.example.mytemplate.base.BaseViewModel
 import com.example.mytemplate.ui.splash.InitContract.InitEffect
-import com.example.mytemplate.ui.splash.InitContract.InitIntent
+import com.example.mytemplate.ui.splash.InitContract.InitEvent
 import com.example.mytemplate.ui.splash.InitContract.InitState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -11,13 +11,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InitViewModel @Inject constructor() : BaseViewModel<InitIntent, InitState, InitEffect>() {
+class InitViewModel @Inject constructor() : BaseViewModel<InitEvent, InitState, InitEffect>() {
 
     override fun createInitialState(): InitState = InitState()
 
-    override fun handleIntent(intent: InitIntent) {
-        when (intent) {
-            is InitIntent.Initialize -> initialize()
+    override fun handleEvent(event: InitEvent) {
+        when (event) {
+            is InitEvent.Initialize -> initialize()
         }
     }
 

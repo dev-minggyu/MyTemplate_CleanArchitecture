@@ -10,12 +10,12 @@ import com.example.mytemplate.base.BaseActivity
 import com.example.mytemplate.databinding.ActivityInitBinding
 import com.example.mytemplate.ui.main.MainActivity
 import com.example.mytemplate.ui.splash.InitContract.InitEffect
-import com.example.mytemplate.ui.splash.InitContract.InitIntent
+import com.example.mytemplate.ui.splash.InitContract.InitEvent
 import com.example.mytemplate.ui.splash.InitContract.InitState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InitActivity : BaseActivity<ActivityInitBinding, InitIntent, InitState, InitEffect, InitViewModel>() {
+class InitActivity : BaseActivity<ActivityInitBinding, InitEvent, InitState, InitEffect, InitViewModel>() {
     override val viewModel: InitViewModel by viewModels()
 
     private var isReady = false
@@ -31,7 +31,7 @@ class InitActivity : BaseActivity<ActivityInitBinding, InitIntent, InitState, In
     }
 
     override fun initView() {
-        processIntent(InitIntent.Initialize)
+        processEvent(InitEvent.Initialize)
     }
 
     override fun renderState(state: InitState) {
@@ -54,7 +54,7 @@ class InitActivity : BaseActivity<ActivityInitBinding, InitIntent, InitState, In
     }
 
     private fun navigateToMain() {
-        startActivity(InitIntent(this, MainActivity::class.java))
+        startActivity(InitEvent(this, MainActivity::class.java))
         finish()
     }
 

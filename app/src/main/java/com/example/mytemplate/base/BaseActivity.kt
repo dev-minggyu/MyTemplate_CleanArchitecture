@@ -7,11 +7,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.example.mytemplate.base.contract.UiEffect
-import com.example.mytemplate.base.contract.UiIntent
+import com.example.mytemplate.base.contract.UiEvent
 import com.example.mytemplate.base.contract.UiState
 import kotlinx.coroutines.launch
 
-abstract class BaseActivity<T : ViewBinding, I : UiIntent, S : UiState, E : UiEffect, VM : BaseViewModel<I, S, E>> : AppCompatActivity() {
+abstract class BaseActivity<T : ViewBinding, Event : UiEvent, State : UiState, Effect : UiEffect, VM : BaseViewModel<Event, State, Effect>> : AppCompatActivity() {
     private var _binding: T? = null
     val binding get() = _binding!!
 
@@ -51,12 +51,12 @@ abstract class BaseActivity<T : ViewBinding, I : UiIntent, S : UiState, E : UiEf
         }
     }
 
-    abstract fun renderState(state: S)
+    abstract fun renderState(state: State)
 
-    abstract fun handleEffect(effect: E)
+    abstract fun handleEffect(effect: Effect)
 
-    fun processIntent(intent: I) {
-        viewModel.processIntent(intent)
+    fun processEvent(event: Event) {
+        viewModel.processEvent(event)
     }
 
     override fun onDestroy() {

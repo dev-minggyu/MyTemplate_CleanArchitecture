@@ -1,12 +1,12 @@
 package com.example.mytemplate.ui.splash
 
 import com.example.mytemplate.base.contract.UiEffect
-import com.example.mytemplate.base.contract.UiIntent
+import com.example.mytemplate.base.contract.UiEvent
 import com.example.mytemplate.base.contract.UiState
 
 class InitContract {
-    sealed class InitIntent : UiIntent {
-        data object Initialize : InitIntent()
+    sealed class InitEvent : UiEvent {
+        data object Initialize : InitEvent()
     }
 
     data class InitState(

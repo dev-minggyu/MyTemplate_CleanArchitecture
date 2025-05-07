@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytemplate.base.BaseActivity
 import com.example.mytemplate.databinding.ActivityMainBinding
 import com.example.mytemplate.ui.main.MainContract.MainEffect
-import com.example.mytemplate.ui.main.MainContract.MainIntent
+import com.example.mytemplate.ui.main.MainContract.MainEvent
 import com.example.mytemplate.ui.main.MainContract.MainState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainIntent, MainState, MainEffect, MainViewModel>() {
+class MainActivity : BaseActivity<ActivityMainBinding, MainEvent, MainState, MainEffect, MainViewModel>() {
     override val viewModel: MainViewModel by viewModels()
 
     override fun inflateViewBinding(): ActivityMainBinding {
@@ -26,15 +26,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainIntent, MainState, Ma
 
     override fun initView() {
         binding.btnLoadData.setOnClickListener {
-            processIntent(MainIntent.LoadData)
+            processEvent(MainEvent.LoadData)
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = MainAdapter { id ->
-            processIntent(MainIntent.ClickItem(id))
+            processEvent(MainEvent.ClickItem(id))
         }
 
-        processIntent(MainIntent.LoadData)
+        processEvent(MainEvent.LoadData)
     }
 
     override fun renderState(state: MainState) {

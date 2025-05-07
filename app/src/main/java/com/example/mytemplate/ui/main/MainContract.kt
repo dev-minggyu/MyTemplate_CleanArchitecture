@@ -1,13 +1,13 @@
 package com.example.mytemplate.ui.main
 
 import com.example.mytemplate.base.contract.UiEffect
-import com.example.mytemplate.base.contract.UiIntent
+import com.example.mytemplate.base.contract.UiEvent
 import com.example.mytemplate.base.contract.UiState
 
 class MainContract {
-    sealed class MainIntent : UiIntent {
-        data object LoadData : MainIntent()
-        data class ClickItem(val id: String) : MainIntent()
+    sealed class MainEvent : UiEvent {
+        data object LoadData : MainEvent()
+        data class ClickItem(val id: String) : MainEvent()
     }
 
     data class MainState(

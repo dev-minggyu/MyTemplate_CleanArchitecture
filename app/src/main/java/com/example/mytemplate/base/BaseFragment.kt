@@ -10,11 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.example.mytemplate.base.contract.UiEffect
-import com.example.mytemplate.base.contract.UiIntent
+import com.example.mytemplate.base.contract.UiEvent
 import com.example.mytemplate.base.contract.UiState
 import kotlinx.coroutines.launch
 
-abstract class BaseFragment<T : ViewBinding, I : UiIntent, S : UiState, E : UiEffect, VM : BaseViewModel<I, S, E>> : Fragment() {
+abstract class BaseFragment<T : ViewBinding, Event : UiEvent, State : UiState, Effect : UiEffect, VM : BaseViewModel<Event, State, Effect>> : Fragment() {
     private var _binding: T? = null
     val binding get() = _binding!!
 
@@ -27,9 +27,6 @@ abstract class BaseFragment<T : ViewBinding, I : UiIntent, S : UiState, E : UiEf
         return binding.root
     }
 
-    /**
-     * ViewBinding을 inflate하는 추상 메서드
-     */
     abstract fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): T
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,14 +36,8 @@ abstract class BaseFragment<T : ViewBinding, I : UiIntent, S : UiState, E : UiEf
         observeEffect()
     }
 
-    /**
-     * 뷰 초기화 메서드
-     */
     abstract fun initView()
 
-    /**
-     * State 관찰 메서드
-     */
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -57,9 +48,6 @@ abstract class BaseFragment<T : ViewBinding, I : UiIntent, S : UiState, E : UiEf
         }
     }
 
-    /**
-     * Effect 관찰 메서드
-     */
     private fun observeEffect() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -70,21 +58,12 @@ abstract class BaseFragment<T : ViewBinding, I : UiIntent, S : UiState, E : UiEf
         }
     }
 
-    /**
-     * State 렌더링 메서드
-     */
-    abstract fun renderState(state: S)
+    abstract fun renderState(state: State)
 
-    /**
-     * Effect 처리 메서드
-     */
-    abstract fun handleEffect(effect: E)
+    abstract fun handleEffect(effect: Effect)
 
-    /**
-     * Intent 처리 메서드
-     */
-    fun processIntent(intent: I) {
-        viewModel.processIntent(intent)
+    fun processEvent(event: Event) {
+        viewModel.processEvent(event)
     }
 
     override fun onDestroyView() {

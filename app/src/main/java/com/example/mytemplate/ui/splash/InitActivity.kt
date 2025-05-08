@@ -1,5 +1,6 @@
 package com.example.mytemplate.ui.splash
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -9,13 +10,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.mytemplate.base.BaseActivity
 import com.example.mytemplate.databinding.ActivityInitBinding
 import com.example.mytemplate.ui.main.MainActivity
-import com.example.mytemplate.ui.splash.InitContract.InitEffect
-import com.example.mytemplate.ui.splash.InitContract.InitEvent
-import com.example.mytemplate.ui.splash.InitContract.InitState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InitActivity : BaseActivity<ActivityInitBinding, InitEvent, InitState, InitEffect, InitViewModel>() {
+class InitActivity :
+    BaseActivity<ActivityInitBinding, InitContract.Event, InitContract.Mutation, InitContract.State, InitContract.Effect, InitViewModel>() {
+
     override val viewModel: InitViewModel by viewModels()
 
     private var isReady = false
@@ -31,30 +31,30 @@ class InitActivity : BaseActivity<ActivityInitBinding, InitEvent, InitState, Ini
     }
 
     override fun initView() {
-        processEvent(InitEvent.Initialize)
+
     }
 
-    override fun renderState(state: InitState) {
+    override fun renderState(state: InitContract.State) {
         isReady = state.isInitialized
-
         state.error?.let {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun handleEffect(effect: InitEffect) {
+    override fun handleEffect(effect: InitContract.Effect) {
         when (effect) {
-            is InitEffect.NavigateToMain -> {
+            is InitContract.Effect.NavigateToMain -> {
                 navigateToMain()
             }
-            is InitEffect.ShowError -> {
+
+            is InitContract.Effect.ShowError -> {
                 Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun navigateToMain() {
-        startActivity(InitEvent(this, MainActivity::class.java))
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 

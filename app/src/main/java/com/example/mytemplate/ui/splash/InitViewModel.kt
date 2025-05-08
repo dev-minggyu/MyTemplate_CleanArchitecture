@@ -2,38 +2,26 @@ package com.example.mytemplate.ui.splash
 
 import androidx.lifecycle.viewModelScope
 import com.example.mytemplate.base.BaseViewModel
-import com.example.mytemplate.ui.splash.InitContract.InitEffect
-import com.example.mytemplate.ui.splash.InitContract.InitEvent
-import com.example.mytemplate.ui.splash.InitContract.InitState
+import com.example.mytemplate.utils.extension.reduceToState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onSubscription
 import javax.inject.Inject
 
 @HiltViewModel
-class InitViewModel @Inject constructor() : BaseViewModel<InitEvent, InitState, InitEffect>() {
-
-    override fun createInitialState(): InitState = InitState()
-
-    override fun handleEvent(event: InitEvent) {
-        when (event) {
-            is InitEvent.Initialize -> initialize()
-        }
-    }
-
-    private fun initialize() {
-        viewModelScope.launch {
-            try {
-                delay(1000)
-
-                setState { copy(isInitialized = true) }
-
-                setEffect(InitEffect.NavigateToMain)
-            } catch (e: Exception) {
-                setState { copy(error = e.message) }
-
-                setEffect(InitEffect.ShowError(e.message ?: "초기화 중 오류가 발생했습니다."))
-            }
-        }
-    }
+class InitViewModel @Inject constructor(
+    processor: InitProcessor,
+    reducer: InitReducer
+) : BaseViewModel<InitContract.Event, InitContract.Mutation, InitContract.State, InitContract.Effect>(
+    processor = processor,
+    reducer = reducer
+) {
+    override val uiState: StateFlow<InitContract.State> = uiEvent
+        .onSubscription { sendEvent(InitContract.Event.Initialize) }
+        .reduceToState(
+            processor = ::processEvent,
+            reducer = ::reduceMutation,
+            initialState = InitContract.State(),
+            scope = viewModelScope
+        )
 }

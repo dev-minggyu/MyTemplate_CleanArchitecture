@@ -4,54 +4,46 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mytemplate.base.contract.UiEffect
 import com.example.mytemplate.base.contract.UiEvent
+import com.example.mytemplate.base.contract.UiMutation
 import com.example.mytemplate.base.contract.UiState
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect> : ViewModel() {
+abstract class BaseViewModel<Event : UiEvent, Mutation : UiMutation, State : UiState, Effect : UiEffect>(
+    private val processor: BaseProcessor<Event, Mutation>,
+    private val reducer: BaseReducer<Mutation, State, Effect>,
+) : ViewModel() {
 
-    private val _state: MutableStateFlow<State> by lazy { MutableStateFlow(createInitialState()) }
-    val state: StateFlow<State> = _state.asStateFlow()
+    abstract val uiState: StateFlow<State>
 
-    private val _event = MutableSharedFlow<Event>()
+    protected val uiEvent = MutableSharedFlow<Event>()
 
-    private val _effect = Channel<Effect>(Channel.BUFFERED)
-    val effect = _effect.receiveAsFlow()
+    private val _uiEffect = Channel<Effect>(Channel.BUFFERED)
+    val uiEffect = _uiEffect.receiveAsFlow()
 
-    init {
+    protected fun processEvent(event: Event): Flow<Mutation> {
+        return processor.process(event)
+    }
+
+    protected fun reduceMutation(state: State, mutation: Mutation): State {
+        val (newState, effects) = reducer.reduce(state, mutation)
+        effects.forEach { sendEffect(it) }
+        return newState
+    }
+
+    protected fun sendEffect(effect: Effect) {
         viewModelScope.launch {
-            _event.collect { intent ->
-                handleEvent(intent)
-            }
+            _uiEffect.send(effect)
         }
     }
 
-    protected abstract fun handleEvent(event: Event)
-
-    protected abstract fun createInitialState(): State
-
-    protected val currentState: State
-        get() = state.value
-
-    protected fun setState(reduce: State.() -> State) {
-        val newState = currentState.reduce()
-        _state.value = newState
-    }
-
-    protected fun setEffect(effect: Effect) {
+    fun sendEvent(event: Event) {
         viewModelScope.launch {
-            _effect.send(effect)
+            this@BaseViewModel.uiEvent.emit(event)
         }
     }
-
-    fun processEvent(event: Event) {
-        viewModelScope.launch {
-            _event.emit(event)
-        }
-    }
-} 
+}

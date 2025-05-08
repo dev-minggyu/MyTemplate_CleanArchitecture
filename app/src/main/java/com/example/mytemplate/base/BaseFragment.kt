@@ -11,10 +11,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.example.mytemplate.base.contract.UiEffect
 import com.example.mytemplate.base.contract.UiEvent
+import com.example.mytemplate.base.contract.UiMutation
 import com.example.mytemplate.base.contract.UiState
 import kotlinx.coroutines.launch
 
-abstract class BaseFragment<T : ViewBinding, Event : UiEvent, State : UiState, Effect : UiEffect, VM : BaseViewModel<Event, State, Effect>> : Fragment() {
+abstract class BaseFragment<T : ViewBinding, Event : UiEvent, Mutation : UiMutation, State : UiState, Effect : UiEffect, VM : BaseViewModel<Event, Mutation, State, Effect>> : Fragment() {
     private var _binding: T? = null
     val binding get() = _binding!!
 
@@ -41,7 +42,7 @@ abstract class BaseFragment<T : ViewBinding, Event : UiEvent, State : UiState, E
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
+                viewModel.uiState.collect { state ->
                     renderState(state)
                 }
             }
@@ -51,7 +52,7 @@ abstract class BaseFragment<T : ViewBinding, Event : UiEvent, State : UiState, E
     private fun observeEffect() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.effect.collect { effect ->
+                viewModel.uiEffect.collect { effect ->
                     handleEffect(effect)
                 }
             }
@@ -62,8 +63,8 @@ abstract class BaseFragment<T : ViewBinding, Event : UiEvent, State : UiState, E
 
     abstract fun handleEffect(effect: Effect)
 
-    fun processEvent(event: Event) {
-        viewModel.processEvent(event)
+    fun sendEvent(event: Event) {
+        viewModel.sendEvent(event)
     }
 
     override fun onDestroyView() {

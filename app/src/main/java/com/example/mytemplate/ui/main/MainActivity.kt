@@ -7,13 +7,11 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytemplate.base.BaseActivity
 import com.example.mytemplate.databinding.ActivityMainBinding
-import com.example.mytemplate.ui.main.MainContract.MainEffect
-import com.example.mytemplate.ui.main.MainContract.MainEvent
-import com.example.mytemplate.ui.main.MainContract.MainState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainEvent, MainState, MainEffect, MainViewModel>() {
+class MainActivity :
+    BaseActivity<ActivityMainBinding, MainContract.Event, MainContract.Mutation, MainContract.State, MainContract.Effect, MainViewModel>() {
     override val viewModel: MainViewModel by viewModels()
 
     override fun inflateViewBinding(): ActivityMainBinding {
@@ -25,34 +23,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainEvent, MainState, Mai
     }
 
     override fun initView() {
-        binding.btnLoadData.setOnClickListener {
-            processEvent(MainEvent.LoadData)
-        }
-
+        binding.btnLoadData.setOnClickListener { sendEvent(MainContract.Event.LoadData) }
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = MainAdapter { id ->
-            processEvent(MainEvent.ClickItem(id))
-        }
-
-        processEvent(MainEvent.LoadData)
+        binding.recyclerView.adapter = MainAdapter { id -> sendEvent(MainContract.Event.ClickItem(id)) }
     }
 
-    override fun renderState(state: MainState) {
+    override fun renderState(state: MainContract.State) {
         binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
-
         (binding.recyclerView.adapter as? MainAdapter)?.submitList(state.data)
-
         state.error?.let {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun handleEffect(effect: MainEffect) {
+    override fun handleEffect(effect: MainContract.Effect) {
         when (effect) {
-            is MainEffect.ShowToast -> {
+            is MainContract.Effect.ShowToast -> {
                 Toast.makeText(this, effect.message, Toast.LENGTH_SHORT).show()
             }
-            is MainEffect.NavigateToDetail -> {
+
+            is MainContract.Effect.NavigateToDetail -> {
                 Toast.makeText(this, "상세 화면으로 이동: ${effect.id}", Toast.LENGTH_SHORT).show()
             }
         }

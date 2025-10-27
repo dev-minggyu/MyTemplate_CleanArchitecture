@@ -1,10 +1,10 @@
 plugins {
-    id("mytemplate.android.library")
-    id("mytemplate.android.retrofit.plugin")
+    id("template.android.library")
+    id("template.android.retrofit.plugin")
 }
 
 android {
-    namespace = "com.example.network"
+    namespace = "com.template.network"
 }
 
 dependencies {

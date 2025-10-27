@@ -1,10 +1,10 @@
 plugins {
-    id("mytemplate.android.library")
-    id("mytemplate.android.room.plugin")
+    id("template.android.library")
+    id("template.android.room.plugin")
 }
 
 android {
-    namespace = "com.example.database"
+    namespace = "com.template.database"
 }
 
 dependencies {

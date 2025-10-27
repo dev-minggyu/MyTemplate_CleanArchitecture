@@ -1,9 +1,9 @@
 plugins {
-    id("mytemplate.android.library")
+    id("template.android.library")
 }
 
 android {
-    namespace = "com.example.domain"
+    namespace = "com.template.domain"
 }
 
 dependencies {

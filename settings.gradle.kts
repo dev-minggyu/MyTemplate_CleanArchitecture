@@ -1,4 +1,4 @@
-rootProject.name = "MyTemplate_CleanArchitecture"
+rootProject.name = "TemplateApp"
 
 gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:testClasses"))
 

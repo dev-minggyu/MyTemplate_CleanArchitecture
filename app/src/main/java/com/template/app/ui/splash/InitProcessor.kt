@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class InitProcessor : BaseProcessor<InitContract.Action, InitContract.Mutation>() {
-    override fun process(event: InitContract.Action): Flow<InitContract.Mutation> {
-        return when (event) {
+    override fun process(action: InitContract.Action): Flow<InitContract.Mutation> {
+        return when (action) {
             InitContract.Action.Initialize -> flow {
                 delay(1000)
                 emit(InitContract.Mutation.InitComplete)

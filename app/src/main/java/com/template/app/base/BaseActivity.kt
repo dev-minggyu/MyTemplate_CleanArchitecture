@@ -12,7 +12,7 @@ import com.template.app.base.contract.UiMutation
 import com.template.app.base.contract.UiState
 import kotlinx.coroutines.launch
 
-abstract class BaseActivity<T : ViewBinding, Event : UiAction, Mutation : UiMutation, State : UiState, Effect : UiEvent, VM : BaseViewModel<Event, Mutation, State, Effect>> :
+abstract class BaseActivity<T : ViewBinding, Action : UiAction, Mutation : UiMutation, State : UiState, Event : UiEvent, VM : BaseViewModel<Action, Mutation, State, Event>> :
     AppCompatActivity() {
     private var _binding: T? = null
     val binding get() = _binding!!
@@ -25,7 +25,7 @@ abstract class BaseActivity<T : ViewBinding, Event : UiAction, Mutation : UiMuta
         setContentView(binding.root)
         initView()
         observeState()
-        observeEffect()
+        observeEvent()
     }
 
     abstract fun inflateViewBinding(): T
@@ -42,11 +42,11 @@ abstract class BaseActivity<T : ViewBinding, Event : UiAction, Mutation : UiMuta
         }
     }
 
-    private fun observeEffect() {
+    private fun observeEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiEffect.collect { effect ->
-                    handleEffect(effect)
+                viewModel.uiEvent.collect { event ->
+                    handleEvent(event)
                 }
             }
         }
@@ -54,10 +54,10 @@ abstract class BaseActivity<T : ViewBinding, Event : UiAction, Mutation : UiMuta
 
     abstract fun renderState(state: State)
 
-    abstract fun handleEffect(effect: Effect)
+    abstract fun handleEvent(event: Event)
 
-    fun sendEvent(event: Event) {
-        viewModel.sendEvent(event)
+    fun sendAction(action: Action) {
+        viewModel.sendAction(action)
     }
 
     override fun onDestroy() {

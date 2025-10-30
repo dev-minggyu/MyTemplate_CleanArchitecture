@@ -7,23 +7,23 @@ class MainReducer : BaseReducer<MainContract.Mutation, MainContract.State, MainC
         currentState: MainContract.State, mutation: MainContract.Mutation
     ): ReduceResult<MainContract.State, MainContract.Event> {
         return when (mutation) {
-            is MainContract.Mutation.ItemClicked -> stateWithEffects(
+            is MainContract.Mutation.ItemClicked -> stateWithEvents(
                 newState = currentState,
-                effectList = listOf(MainContract.Event.NavigateToDetail(mutation.id))
+                eventList = listOf(MainContract.Event.NavigateToDetail(mutation.id))
             )
 
-            is MainContract.Mutation.ShowContent -> stateWithEffects(
+            is MainContract.Mutation.ShowContent -> stateWithEvents(
                 newState = currentState.copy(isLoading = false, data = mutation.list),
-                effectList = listOf(MainContract.Event.ShowToast("데이터 로드 완료"))
+                eventList = listOf(MainContract.Event.ShowToast("데이터 로드 완료"))
             )
 
-            MainContract.Mutation.ShowLoader -> stateWithEffects(
+            MainContract.Mutation.ShowLoader -> stateWithEvents(
                 newState = currentState.copy(isLoading = true)
             )
 
-            is MainContract.Mutation.ShowError -> stateWithEffects(
+            is MainContract.Mutation.ShowError -> stateWithEvents(
                 newState = currentState,
-                effectList = listOf(MainContract.Event.ShowToast(mutation.msg))
+                eventList = listOf(MainContract.Event.ShowToast(mutation.msg))
             )
         }
     }

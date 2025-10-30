@@ -35,16 +35,16 @@ fun MainScreen(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.uiEffect.collect { effect ->
-            when (effect) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
                 is MainContract.Event.ShowToast -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
 
                 is MainContract.Event.NavigateToDetail -> {
                     Toast.makeText(
                         context,
-                        "상세 화면으로 이동: ${effect.id}",
+                        "상세 화면으로 이동: ${event.id}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -54,14 +54,14 @@ fun MainScreen(
 
     MainContent(
         state = state,
-        onEvent = viewModel::sendEvent
+        onAction = viewModel::sendAction
     )
 }
 
 @Composable
 private fun MainContent(
     state: MainContract.State,
-    onEvent: (MainContract.Action) -> Unit,
+    onAction: (MainContract.Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -71,7 +71,7 @@ private fun MainContent(
             modifier = Modifier.fillMaxSize()
         ) {
             Button(
-                onClick = { onEvent(MainContract.Action.LoadData) },
+                onClick = { onAction(MainContract.Action.LoadData) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -90,7 +90,7 @@ private fun MainContent(
                 ) { item ->
                     MainListItem(
                         item = item,
-                        onClick = { onEvent(MainContract.Action.ClickItem(item)) }
+                        onClick = { onAction(MainContract.Action.ClickItem(item)) }
                     )
                 }
             }

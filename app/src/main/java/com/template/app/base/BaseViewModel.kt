@@ -13,37 +13,37 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<Event : UiAction, Mutation : UiMutation, State : UiState, Effect : UiEvent>(
-    private val processor: BaseProcessor<Event, Mutation>,
-    private val reducer: BaseReducer<Mutation, State, Effect>,
+abstract class BaseViewModel<Action : UiAction, Mutation : UiMutation, State : UiState, Event : UiEvent>(
+    private val processor: BaseProcessor<Action, Mutation>,
+    private val reducer: BaseReducer<Mutation, State, Event>,
 ) : ViewModel() {
 
     abstract val uiState: StateFlow<State>
 
-    protected val uiEvent = MutableSharedFlow<Event>()
+    protected val uiAction = MutableSharedFlow<Action>()
 
-    private val _uiEffect = Channel<Effect>(Channel.BUFFERED)
-    val uiEffect = _uiEffect.receiveAsFlow()
+    private val _uiEvent = Channel<Event>(Channel.BUFFERED)
+    val uiEvent = _uiEvent.receiveAsFlow()
 
-    protected fun processEvent(event: Event): Flow<Mutation> {
-        return processor.process(event)
+    protected fun processAction(action: Action): Flow<Mutation> {
+        return processor.process(action)
     }
 
     protected fun reduceMutation(state: State, mutation: Mutation): State {
-        val (newState, effects) = reducer.reduce(state, mutation)
-        effects.forEach { sendEffect(it) }
+        val (newState, events) = reducer.reduce(state, mutation)
+        events.forEach { sendEvent(it) }
         return newState
     }
 
-    protected fun sendEffect(effect: Effect) {
+    protected fun sendEvent(event: Event) {
         viewModelScope.launch {
-            _uiEffect.send(effect)
+            _uiEvent.send(event)
         }
     }
 
-    fun sendEvent(event: Event) {
+    fun sendAction(action: Action) {
         viewModelScope.launch {
-            this@BaseViewModel.uiEvent.emit(event)
+            this@BaseViewModel.uiAction.emit(action)
         }
     }
 }
